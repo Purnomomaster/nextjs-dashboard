@@ -72,6 +72,59 @@ const customers = [
   },
 ];
 
+const products = [
+  {
+    product_id: '3e6d3f99-b8e0-50d2-8840-5feb1b0c8c7b',
+    name: 'powder',
+    price: 872
+  },
+  {
+    product_id: '49505fd4-77e0-5c78-908f-b7e2ae492da9',
+    name: 'desk',
+    price: 74
+  },
+  {
+    product_id: '6b7ed27e-83c4-5c17-a5ac-4f6c86f46d73',
+    name: 'table',
+    price: 531
+  },
+  {
+    product_id: '6bd6a87a-51a9-51fe-9cde-dc24472e7b59',
+    name: 'bag',
+    price: 751
+  },
+  {
+    product_id: '31c67df8-55ed-5072-982b-2d7c752b2a10',
+    name: 'blanket',
+    price: 437
+  },
+  {
+    product_id: 'eb173519-c1e6-5ded-8f3c-3169aea54d49',
+    name: 'pencil',
+    price: 324
+  },
+  {
+    product_id: 'b68651d6-241b-5fb1-8a5a-ca38f4f0d41a',
+    name: 'pen',
+    price: 665
+  },
+  {
+    product_id: 'a96da7f5-c1a0-525f-ab4b-6e1226368670',
+    name: 'phone',
+    price: 268
+  },
+  {
+    product_id: 'dfb4f1e9-2236-59fc-906b-b240c7ff3f4b',
+    name: 'book',
+    price: 569
+  },
+  {
+    product_id: '7d90f1fc-37b3-56f9-89a6-e2ef85ce4255',
+    name: 'motor',
+    price: 509
+  },
+];
+
 const invoices = [
   {
     customer_id: customers[0].id,
@@ -182,6 +235,7 @@ const revenue = [
 
 module.exports = {
   users,
+  products,
   customers,
   invoices,
   revenue,
