@@ -1,11 +1,11 @@
 "use server"
 
-import { sql } from '@vercel/postgres';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { signIn } from '@/auth';
 import { AuthError } from 'next-auth';
+const client = require('../lib/db');
 
 export type State = {
     errors?: {
@@ -49,10 +49,10 @@ export async function createInvoice(prevState: State, formData: FormData) {
 
     // Insert data into the database
     try {
-        await sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-      `;
+        await client.query({
+            text: 'INSERT INTO invoices (customer_id, amount, status, date) VALUES ($1, $2, $3, $4)',
+            values: [customerId, amountInCents, status, date],
+        });
     } catch (error) {
         // If a database error occurs, return a more specific error.
         return {
@@ -64,6 +64,7 @@ export async function createInvoice(prevState: State, formData: FormData) {
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 }
+
 // Use Zod to update the expected types
 const UpdateInvoice = FormSchema.omit({ id: true, date: true });
 
@@ -84,11 +85,10 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
 
     const amountInCents = amount * 100;
     try {
-        await sql`
-        UPDATE invoices
-        SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-        WHERE id = ${id}
-      `;
+        await client.query({
+            text: 'UPDATE invoices SET customer_id = $1, amount = $2, status = $3 WHERE id = $4',
+            values: [customerId, amountInCents, status, id],
+        });
     } catch (error) {
         return {
             message: 'Database Error: Failed to Update Invoice.'
@@ -98,6 +98,7 @@ export async function updateInvoice(id: string, prevState: State, formData: Form
     revalidatePath('/dashboard/invoices');
     redirect('/dashboard/invoices');
 }
+
 export type PState = {
     errors?: {
         product_id?: string[];
@@ -138,11 +139,10 @@ export async function updateProduct(id: string, prevState: PState, formData: For
 
     const amountInCents = price * 100;
     try {
-        await sql`
-        UPDATE products
-        SET product_id = ${product_id}, price = ${amountInCents}, name = ${name}
-        WHERE product_id = ${product_id}
-      `;
+        await client.query({
+            text: 'UPDATE products SET product_id = $1, price = $2, name = $3 WHERE product_id = $4',
+            values: [product_id, amountInCents, name, product_id],
+        });
     } catch (error) {
         return {
             message: 'Database Error: Failed to Update Product.'
@@ -152,10 +152,14 @@ export async function updateProduct(id: string, prevState: PState, formData: For
     revalidatePath('/dashboard/products');
     redirect('/dashboard/products');
 }
+
 export async function deleteInvoice(id: string) {
     // throw new Error('Failed to Delete Invoice');
     try {
-        await sql`DELETE FROM invoices WHERE id = ${id}`;
+        await client.query({
+            text: 'DELETE FROM invoices WHERE id = $1',
+            values: [id],
+        });
         revalidatePath('/dashboard/invoices');
         return { message: 'Deleted Invoice.' };
     } catch (error) {
@@ -167,8 +171,11 @@ export async function deleteInvoice(id: string) {
 
 export async function deleteProduct(id: string) {
     try {
-        await sql`DELETE FROM products WHERE product_id = ${id}`;
-        revalidatePath('/dashboard/products ');
+        await client.query({
+            text: 'DELETE FROM products WHERE product_id = $1',
+            values: [id],
+        });
+        revalidatePath('/dashboard/products');
         return { message: 'Deleted product.' };
     } catch (error) {
         return {
