@@ -1,5 +1,4 @@
-import { lusitana } from '@/app/ui/fonts';
-import Search from '@/app/ui/search';
+
 import {
     Products,
 } from '@/app/lib/definitions';
@@ -13,10 +12,8 @@ export default async function CustomersTable({
 }) {
     return (
         <div className="w-full">
-            <h1 className={`${lusitana.className} mb-8 text-xl md:text-2xl`}>
-                Products
-            </h1>
-            <Search placeholder="Search products..." />
+
+
             <div className="mt-6 flow-root">
                 <div className="overflow-x-auto">
                     <div className="inline-block min-w-full align-middle">
@@ -24,12 +21,12 @@ export default async function CustomersTable({
                             <div className="md:hidden">
                                 {products?.map((product) => (
                                     <div
-                                        key={product.product_id}
+                                        key={product.id}
                                         className="mb-2 w-full rounded-md bg-white p-4"
                                     >
                                         <div className="flex items-center justify-between border-b pb-4">
                                             <div>
-                                                <p className="text-sm text-gray-500">{product.product_id}</p>
+                                                <p className="text-sm text-gray-500">{product.id}</p>
                                                 <p className="text-sm text-gray-500">
                                                     {product.name}
                                                 </p>
@@ -37,8 +34,8 @@ export default async function CustomersTable({
                                                     {product.price}
                                                 </p>
                                                 <div className="flex justify-end gap-2">
-                                                    <UpdateProduct id={product.product_id} />
-                                                    <DeleteProduct id={product.product_id} />
+                                                    <UpdateProduct id={product.id} />
+                                                    <DeleteProduct id={product.id} />
                                                 </div>
                                             </div>
                                         </div>
@@ -65,9 +62,9 @@ export default async function CustomersTable({
 
                                 <tbody className="divide-y divide-gray-200 text-gray-900">
                                     {products.map((product) => (
-                                        <tr key={product.product_id} className="group">
+                                        <tr key={product.id} className="group">
                                             <td className="whitespace-nowrap bg-white py-5 pl-4 text-sm">
-                                                <p>{product.product_id}</p>
+                                                <p>{product.id}</p>
                                             </td>
                                             <td className="whitespace-nowrap bg-white px-4 py-5 text-sm">
                                                 {product.name}
@@ -77,8 +74,8 @@ export default async function CustomersTable({
                                             </td>
                                             <td className="whitespace-nowrap bg-white py-3 pl-6 pr-3">
                                                 <div className="flex justify-end gap-3">
-                                                    <UpdateProduct id={product.product_id} />
-                                                    <DeleteProduct id={product.product_id} />
+                                                    <UpdateProduct id={product.id} />
+                                                    <DeleteProduct id={product.id} />
                                                 </div>
                                             </td>
                                         </tr>

@@ -53,7 +53,7 @@ async function seedProducts(client) {
     // Create the "products" table if it doesn't exist
     const createTable = await client.query(`
       CREATE TABLE IF NOT EXISTS products (
-        product_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
         price INT NOT NULL
       );
@@ -65,8 +65,8 @@ async function seedProducts(client) {
     const insertedProducts = await Promise.all(
       products.map(async (product) => {
         return client.query({
-          text: 'INSERT INTO products (product_id, name, price) VALUES ($1, $2, $3) ON CONFLICT (product_id) DO NOTHING',
-          values: [product.product_id, product.name, product.price],
+          text: 'INSERT INTO products (id, name, price) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
+          values: [product.id, product.name, product.price],
         });
       })
     );

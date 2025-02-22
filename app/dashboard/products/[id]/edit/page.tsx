@@ -1,4 +1,5 @@
-import Form from '@/app/ui/products/edit-form';
+// import Form from '@/app/ui/products/edit-form';
+import Form from '@/app/ui/products/form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchCustomers, fetchInvoiceById, fetchProduct } from '@/app/lib/data';
 import { notFound } from 'next/navigation';
@@ -26,7 +27,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                     },
                 ]}
             />
-            <Form products={products} />
+            <Form mode="edit" product={products} />
         </main>
     );
 }

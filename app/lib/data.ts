@@ -230,7 +230,7 @@ export async function fetchProducts(query: string) {
   try {
     const data = await client.query(`
       SELECT
-        products.product_id,
+        products.id,
         products.name,
         products.price
       FROM products
@@ -250,17 +250,39 @@ export async function fetchProduct(query: string) {
   try {
     const data = await client.query(`
       SELECT
-        products.product_id,
+        products.id,
         products.name,
         products.price
       FROM products
       WHERE
-        products.product_id = $1
+        products.id = $1
     `, [query]);
 
     return data.rows[0] as Products;
   } catch (error) {
     console.error('Database Error:', error);
     throw new Error('Failed to fetch product.');
+  }
+}
+
+// Ambil semua menu
+export async function fetchMenus() {
+  try {
+    const result = await client.query('SELECT * FROM menu ORDER BY created DESC');
+    return result.rows;
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch menus.');
+  }
+}
+
+// Ambil menu berdasarkan ID
+export async function getMenuById(menuId: number) {
+  try {
+    const result = await client.query('SELECT * FROM menu WHERE id = $1', [menuId]);
+    return result.rows[0];
+  } catch (error) {
+    console.error('Database Error:', error);
+    throw new Error('Failed to fetch menu by ID.');
   }
 }

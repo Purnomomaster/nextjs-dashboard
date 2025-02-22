@@ -88,7 +88,20 @@ export type InvoiceForm = {
 };
 
 export type Products = {
-  product_id: string;
+  id: string;
   name: string;
   price: number;
+  date: Date;
+  description: string;
+  active: boolean;
+  image: string;
+  file: string;
+  [key: string]: any; // Add this line
 }
+
+export type Menu = {
+  id: number;
+  title: string;
+  dir: string;
+  end: string;
+};
