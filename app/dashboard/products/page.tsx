@@ -5,7 +5,7 @@ import { lusitana } from '@/app/ui/fonts';
 // dinamis
 const page = "products";
 import { fetchProducts } from "@/app/lib/data";
-import { CreateProduct } from '@/app/ui/invoices/buttons';
+import { CreateProduct } from '@/app/ui/products/buttons';
 import Table from "@/app/ui/products/table";
 export default async function Page({
     searchParams,

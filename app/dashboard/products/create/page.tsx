@@ -19,7 +19,7 @@ export default async function Page() {
                 },
             ]}
             />
-            <Form mode="create" />
+            <Form mode="create" product={null} />
         </main>
     );
 }

@@ -1,4 +1,4 @@
-import Form from '@/app/ui/invoices/create-form';
+import Form from '@/app/ui/invoices/form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import { fetchCustomers } from '@/app/lib/data';
 import { Metadata } from 'next';
@@ -21,7 +21,7 @@ export default async function Page() {
                     },
                 ]}
             />
-            <Form customers={customers} />
+            <Form mode={'create'} invoice={undefined} customers={customers} />
         </main>
     );
 }

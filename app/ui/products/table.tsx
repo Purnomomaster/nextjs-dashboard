@@ -2,7 +2,7 @@
 import {
     Products,
 } from '@/app/lib/definitions';
-import { DeleteInvoice, DeleteProduct, UpdateInvoice, UpdateProduct } from '../invoices/buttons';
+import { DeleteProduct, UpdateProduct } from '../products/buttons';
 import { formatCurrency } from '@/app/lib/utils';
 
 export default async function CustomersTable({

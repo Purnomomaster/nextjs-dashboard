@@ -1,25 +1,41 @@
 'use client';
 // dinamis
 import { Products } from '@/app/lib/definitions';
+
+interface ProductState {
+  errors: Record<string, string[]>;
+  message: string;
+}
 import inputproduct from './inputproduct';
-import { createProduct, updateProduct } from '@/app/lib/actions';
+import { createProduct, updateProduct } from '@/app/model/products';
 
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { useFormState } from 'react-dom';
 
+const generateProductState = (): ProductState => {
+  const errors: Record<string, string[]> = {};
+  inputproduct.forEach((input) => {
+    errors[input.kolom] = [];
+  });
+  return { errors, message: '' };
+};
+
+const initialState = generateProductState();
+
+
 interface FormProps {
   mode: 'create' | 'edit';
-  product: Products;
+  product?: Products | null;
 }
 
 export default function Form({ mode, product }: FormProps) {
-  const initialState = { message: '', errors: { id: [] as string[] } };
+  // const initialState = { message: '', errors: { id: [] as string[] } };
   const action = mode === 'create' ? createProduct : (product?.id ? updateProduct.bind(null, product.id) : () => Promise.reject('Product ID is required for update'));
   const [state, dispatch] = useFormState(action, initialState);
 
   return (
-    <form action={dispatch} aria-describedby="form-error" encType="multipart/form-data">
+    <form action={dispatch} aria-describedby="form-error">
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Product ID (only for edit mode) */}
         {mode === 'edit' && (
@@ -33,7 +49,7 @@ export default function Form({ mode, product }: FormProps) {
                 id="id"
                 name="id"
                 className="peer block w-full cursor-pointer rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                defaultValue={product.id}
+                defaultValue={product?.id ?? ''}
                 aria-describedby="product-id-error"
                 readOnly
               />
