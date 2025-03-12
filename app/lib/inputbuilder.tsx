@@ -1,4 +1,9 @@
-export function generateInputs(input: any, state: any, item: any, dropdownOptions: { [key: string]: string[] }) {
+export function generateInputs(
+  input: any,
+  state: any,
+  item: any,
+  dropdownOptions: { [key: string]: string[] },
+) {
   interface Input {
     kolom: string;
     label: string;
@@ -84,11 +89,13 @@ export function generateInputs(input: any, state: any, item: any, dropdownOption
       )}
       <div id={`${input.kolom}-error`} aria-live="polite" aria-atomic="true">
         {state.errors?.[input.kolom as keyof typeof state.errors] &&
-          state.errors[input.kolom as keyof typeof state.errors]?.map((error: string) => (
-            <p className="mt-2 text-sm text-red-500" key={error}>
-              {error}
-            </p>
-          ))}
+          state.errors[input.kolom as keyof typeof state.errors]?.map(
+            (error: string) => (
+              <p className="mt-2 text-sm text-red-500" key={error}>
+                {error}
+              </p>
+            ),
+          )}
       </div>
     </div>
   ));

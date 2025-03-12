@@ -5,8 +5,9 @@ const client = new Client({
   connectionString: process.env.POSTGRES_URL,
 });
 
-client.connect()
+client
+  .connect()
   .then(() => console.log('Connected to the database successfully.'))
-  .catch(err => console.error('Database connection error:', err));
+  .catch((err) => console.error('Database connection error:', err));
 
 module.exports = client;

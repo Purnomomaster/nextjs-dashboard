@@ -1,6 +1,6 @@
 'use client';
 // dinamis
-import { CustomerField,InvoiceForm } from '@/app/lib/definitions';
+import { CustomerField, InvoiceForm } from '@/app/lib/definitions';
 import { generateInputs } from '@/app/lib/inputbuilder';
 import input from './input';
 import { creating, updating, initialState } from '@/app/model/invoices';
@@ -16,8 +16,13 @@ interface FormProps {
 }
 
 export default function Form({ mode, invoice, customers }: FormProps) {
-  const initialState = { message: '', errors: { id: [] as string[]} };
-  const action = mode === 'create' ? creating : (invoice?.id ? updating.bind(null, invoice.id) : () => Promise.reject('Invoice ID is required for update'));
+  const initialState = { message: '', errors: { id: [] as string[] } };
+  const action =
+    mode === 'create'
+      ? creating
+      : invoice?.id
+        ? updating.bind(null, invoice.id)
+        : () => Promise.reject('Invoice ID is required for update');
   const [state, dispatch] = useFormState(action, initialState);
 
   // Define dropdown options
@@ -27,7 +32,11 @@ export default function Form({ mode, invoice, customers }: FormProps) {
   };
 
   return (
-    <form action={dispatch} aria-describedby="form-error" encType="multipart/form-data">
+    <form
+      action={dispatch}
+      aria-describedby="form-error"
+      encType="multipart/form-data"
+    >
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Invoice ID (only for edit mode) */}
         {mode === 'edit' && (
@@ -62,9 +71,7 @@ export default function Form({ mode, invoice, customers }: FormProps) {
 
         <div id="form-error" aria-live="polite" aria-atomic="true">
           {state.message && (
-            <p className="mt-2 text-sm text-red-500">
-              {state.message}
-            </p>
+            <p className="mt-2 text-sm text-red-500">{state.message}</p>
           )}
         </div>
       </div>
@@ -75,7 +82,9 @@ export default function Form({ mode, invoice, customers }: FormProps) {
         >
           Cancel
         </Link>
-        <Button type="submit">{mode === 'create' ? 'Create Invoice' : 'Edit Invoice'}</Button>
+        <Button type="submit">
+          {mode === 'create' ? 'Create Invoice' : 'Edit Invoice'}
+        </Button>
       </div>
     </form>
   );

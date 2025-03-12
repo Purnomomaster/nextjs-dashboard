@@ -21,7 +21,7 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-  { name: 'Products', href: '/dashboard/products', icon: ArchiveBoxIcon },
+  { name: 'Product', href: '/dashboard/product', icon: ArchiveBoxIcon },
   { name: 'Menus', href: '/dashboard/menu', icon: InboxIcon },
 ];
 

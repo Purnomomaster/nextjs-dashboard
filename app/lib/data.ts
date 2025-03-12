@@ -6,7 +6,7 @@ import {
   LatestInvoiceRaw,
   User,
   Revenue,
-  Products,
+  Product,
 } from './definitions';
 import { formatCurrency } from './utils';
 import { unstable_noStore as noStore } from 'next/cache';
@@ -80,12 +80,16 @@ export async function fetchCardData() {
 }
 
 const ITEMS_PER_PAGE = 6;
-export async function fetchFilteredInvoices(query: string, currentPage: number) {
+export async function fetchFilteredInvoices(
+  query: string,
+  currentPage: number,
+) {
   noStore();
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const data = await client.query(`
+    const data = await client.query(
+      `
       SELECT
         invoices.id,
         invoices.amount,
@@ -104,7 +108,9 @@ export async function fetchFilteredInvoices(query: string, currentPage: number) 
         invoices.status ILIKE $1
       ORDER BY invoices.date DESC
       LIMIT $2 OFFSET $3
-    `, [`%${query}%`, ITEMS_PER_PAGE, offset]);
+    `,
+      [`%${query}%`, ITEMS_PER_PAGE, offset],
+    );
 
     return data.rows as InvoicesTable[];
   } catch (error) {
@@ -116,7 +122,8 @@ export async function fetchFilteredInvoices(query: string, currentPage: number) 
 export async function fetchInvoicesPages(query: string) {
   noStore();
   try {
-    const data = await client.query(`
+    const data = await client.query(
+      `
       SELECT COUNT(*)
       FROM invoices
       JOIN customers ON invoices.customer_id = customers.id
@@ -126,7 +133,9 @@ export async function fetchInvoicesPages(query: string) {
         invoices.amount::text ILIKE $1 OR
         invoices.date::text ILIKE $1 OR
         invoices.status ILIKE $1
-    `, [`%${query}%`]);
+    `,
+      [`%${query}%`],
+    );
 
     const totalPages = Math.ceil(Number(data.rows[0].count) / ITEMS_PER_PAGE);
     return totalPages;
@@ -139,7 +148,8 @@ export async function fetchInvoicesPages(query: string) {
 export async function fetchInvoiceById(id: string) {
   noStore();
   try {
-    const data = await client.query(`
+    const data = await client.query(
+      `
       SELECT
         invoices.id,
         invoices.customer_id,
@@ -147,7 +157,9 @@ export async function fetchInvoiceById(id: string) {
         invoices.status
       FROM invoices
       WHERE invoices.id = $1
-    `, [id]);
+    `,
+      [id],
+    );
 
     const invoice = (data.rows as InvoiceForm[]).map((invoice) => ({
       ...invoice,
@@ -183,7 +195,8 @@ export async function fetchCustomers() {
 export async function fetchFilteredCustomers(query: string) {
   noStore();
   try {
-    const data = await client.query(`
+    const data = await client.query(
+      `
       SELECT
         customers.id,
         customers.name,
@@ -199,7 +212,9 @@ export async function fetchFilteredCustomers(query: string) {
         customers.email ILIKE $1
       GROUP BY customers.id, customers.name, customers.email, customers.image_url
       ORDER BY customers.name ASC
-    `, [`%${query}%`]);
+    `,
+      [`%${query}%`],
+    );
 
     const customers = (data.rows as CustomersTableType[]).map((customer) => ({
       ...customer,
@@ -217,7 +232,9 @@ export async function fetchFilteredCustomers(query: string) {
 export async function getUser(email: string) {
   noStore();
   try {
-    const data = await client.query('SELECT * FROM users WHERE email=$1', [email]);
+    const data = await client.query('SELECT * FROM users WHERE email=$1', [
+      email,
+    ]);
     return data.rows[0] as User;
   } catch (error) {
     console.error('Failed to fetch user:', error);
@@ -225,50 +242,12 @@ export async function getUser(email: string) {
   }
 }
 
-export async function fetchProducts(query: string) {
-  noStore();
-  try {
-    const data = await client.query(`
-      SELECT
-        products.id,
-        products.name,
-        products.price
-      FROM products
-      WHERE
-        products.name LIKE $1
-    `, [`%${query}%`]);
-
-    return data.rows as Products[];
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch product.');
-  }
-}
-
-export async function fetchProduct(query: string) {
-  noStore();
-  try {
-    const data = await client.query(`
-      SELECT
-        products.id,
-        products.name,
-        products.price
-      FROM products
-      WHERE
-        products.id = $1
-    `, [query]);
-
-    return data.rows[0] as Products;
-  } catch (error) {
-    console.error('Database Error:', error);
-    throw new Error('Failed to fetch product.');
-  }
-}
-
 // Ambil semua menu
 export async function fetchMenus() {
   try {
-    const result = await client.query('SELECT * FROM menu ORDER BY created DESC');
+    const result = await client.query(
+      'SELECT * FROM menu ORDER BY created DESC',
+    );
     return result.rows;
   } catch (error) {
     console.error('Database Error:', error);
@@ -279,7 +258,9 @@ export async function fetchMenus() {
 // Ambil menu berdasarkan ID
 export async function getMenuById(menuId: number) {
   try {
-    const result = await client.query('SELECT * FROM menu WHERE id = $1', [menuId]);
+    const result = await client.query('SELECT * FROM menu WHERE id = $1', [
+      menuId,
+    ]);
     return result.rows[0];
   } catch (error) {
     console.error('Database Error:', error);

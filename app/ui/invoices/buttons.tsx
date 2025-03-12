@@ -1,8 +1,7 @@
 import { deleting } from '@/app/model/invoices';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
-import { Button } from "@/app/ui/button";
-
+import { Button } from '@/app/ui/button';
 
 export function CreateInvoice() {
   return (
@@ -16,8 +15,6 @@ export function CreateInvoice() {
   );
 }
 
-
-
 export function UpdateInvoice({ id }: { id: string }) {
   return (
     <Link
@@ -28,7 +25,6 @@ export function UpdateInvoice({ id }: { id: string }) {
     </Link>
   );
 }
-
 
 export function Delete({ id }: { id: string }) {
   const deleteWithId = deleting.bind(null, id);
@@ -43,8 +39,6 @@ export function Delete({ id }: { id: string }) {
     </>
   );
 }
-
-
 
 // export default function CreateMenu() {
 //     return (

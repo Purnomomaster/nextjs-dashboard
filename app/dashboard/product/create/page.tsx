@@ -1,28 +1,25 @@
-import Form from '@/app/ui/menu/create';
+// import Form from '@/app/ui/products/create-form';
+import Form from '@/app/ui/product/form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchMenus } from '@/app/lib/data';
 import { Metadata } from 'next';
-
 export const metadata: Metadata = {
-  title: 'Create Menu',
+  title: 'Create Product',
 };
 
 export default async function Page() {
-  const menus = await fetchMenus();
-
   return (
     <main>
       <Breadcrumbs
         breadcrumbs={[
-          { label: 'Menu', href: '/dashboard/menu' },
+          { label: 'Product', href: '/dashboard/product' },
           {
-            label: 'Create Menu',
-            href: '/dashboard/menu/create',
+            label: 'Create Product',
+            href: '/dashboard/product/create',
             active: true,
           },
         ]}
       />
-      <Form menus={menus} />
+      <Form mode="create" product={null} />
     </main>
   );
 }

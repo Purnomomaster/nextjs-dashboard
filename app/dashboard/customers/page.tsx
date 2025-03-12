@@ -4,22 +4,24 @@ import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 export const metadata: Metadata = {
-    title: 'Customers',
+  title: 'Customers',
 };
 export default async function Page({
-    searchParams,
+  searchParams,
 }: {
-    searchParams?: {
-        query?: string;
-    };
+  searchParams?: {
+    query?: string;
+  };
 }) {
-    const query = searchParams?.query || "";
-    const customers = await fetchFilteredCustomers(query)
-    return (
-        <div className="w-full">
-            <Suspense fallback={<InvoicesTableSkeleton />}>
-                <Table customers={customers} />
-            </Suspense>
-        </div>
-    );
+  const resolvedSearchParams = await searchParams; // Await sebelum digunakan
+  const query = resolvedSearchParams?.query || '';
+  // const query = searchParams?.query || "";
+  const customers = await fetchFilteredCustomers(query);
+  return (
+    <div className="w-full">
+      <Suspense fallback={<InvoicesTableSkeleton />}>
+        <Table customers={customers} />
+      </Suspense>
+    </div>
+  );
 }

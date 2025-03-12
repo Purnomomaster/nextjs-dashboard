@@ -32,7 +32,7 @@ async function seedUsers(client) {
           text: 'INSERT INTO users (id, name, email, password) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING',
           values: [user.id, user.name, user.email, hashedPassword],
         });
-      })
+      }),
     );
 
     console.log(`Seeded ${insertedUsers.length} users`);
@@ -68,7 +68,7 @@ async function seedProducts(client) {
           text: 'INSERT INTO products (id, name, price) VALUES ($1, $2, $3) ON CONFLICT (id) DO NOTHING',
           values: [product.id, product.name, product.price],
         });
-      })
+      }),
     );
 
     console.log(`Seeded ${insertedProducts.length} products`);
@@ -105,9 +105,14 @@ async function seedInvoices(client) {
       invoices.map(async (invoice) => {
         return client.query({
           text: 'INSERT INTO invoices (customer_id, amount, status, date) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING',
-          values: [invoice.customer_id, invoice.amount, invoice.status, invoice.date],
+          values: [
+            invoice.customer_id,
+            invoice.amount,
+            invoice.status,
+            invoice.date,
+          ],
         });
-      })
+      }),
     );
 
     console.log(`Seeded ${insertedInvoices.length} invoices`);
@@ -143,9 +148,14 @@ async function seedCustomers(client) {
       customers.map(async (customer) => {
         return client.query({
           text: 'INSERT INTO customers (id, name, email, image_url) VALUES ($1, $2, $3, $4) ON CONFLICT (id) DO NOTHING',
-          values: [customer.id, customer.name, customer.email, customer.image_url],
+          values: [
+            customer.id,
+            customer.name,
+            customer.email,
+            customer.image_url,
+          ],
         });
-      })
+      }),
     );
 
     console.log(`Seeded ${insertedCustomers.length} customers`);
@@ -179,7 +189,7 @@ async function seedRevenue(client) {
           text: 'INSERT INTO revenue (month, revenue) VALUES ($1, $2) ON CONFLICT (month) DO NOTHING',
           values: [rev.month, rev.revenue],
         });
-      })
+      }),
     );
 
     console.log(`Seeded ${insertedRevenue.length} revenue`);
@@ -201,9 +211,12 @@ async function main() {
     await seedCustomers(client);
     await seedInvoices(client);
     await seedRevenue(client);
-    console.log("Seeding complete");
+    console.log('Seeding complete');
   } catch (err) {
-    console.error('An error occurred while attempting to seed the database:', err);
+    console.error(
+      'An error occurred while attempting to seed the database:',
+      err,
+    );
   } finally {
     await client.end();
   }

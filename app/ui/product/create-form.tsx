@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { Products } from '@/app/lib/definitions';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
@@ -81,7 +81,10 @@ export default function Form() {
 
         {/* Description */}
         <div className="mb-4">
-          <label htmlFor="description" className="mb-2 block text-sm font-medium">
+          <label
+            htmlFor="description"
+            className="mb-2 block text-sm font-medium"
+          >
             Description
           </label>
           <textarea
@@ -100,8 +103,8 @@ export default function Form() {
           </div>
         </div>
 
-         {/* Active Checkbox */}
-         <div className="mb-4">
+        {/* Active Checkbox */}
+        <div className="mb-4">
           <label htmlFor="active" className="mb-2 block text-sm font-medium">
             Active
           </label>
@@ -122,8 +125,8 @@ export default function Form() {
           </div>
         </div>
 
-         {/* Image Upload */}
-         <div className="mb-4">
+        {/* Image Upload */}
+        <div className="mb-4">
           <label htmlFor="image" className="mb-2 block text-sm font-medium">
             Image
           </label>
@@ -169,9 +172,7 @@ export default function Form() {
 
         <div id="form-error" aria-live="polite" aria-atomic="true">
           {state.message && (
-            <p className="mt-2 text-sm text-red-500">
-              {state.message}
-            </p>
+            <p className="mt-2 text-sm text-red-500">{state.message}</p>
           )}
         </div>
       </div>

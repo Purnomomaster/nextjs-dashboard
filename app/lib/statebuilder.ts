@@ -1,23 +1,14 @@
-interface InputField {
-    kolom: string;
+// statebuilder.ts
+export interface State {
+  errors: Record<string, string[]>;
+  message: string;
 }
 
-interface State {
-    errors?: {
-        [key: string]: string[];
-    };
-    message?: string | null;
-}
-
-export function buildInitialState(inputFields: InputField[]): State {
-    const errors: { [key: string]: string[] } = {};
-
-    inputFields.forEach((field) => {
-        errors[field.kolom] = [];
-    });
-
-    return {
-        errors,
-        message: null,
-    };
-}
+// Fungsi untuk membuat state produk
+export const generateState = (inputs: { kolom: string }[]): State => {
+  const errors: Record<string, string[]> = {};
+  inputs.forEach((input) => {
+    errors[input.kolom] = [];
+  });
+  return { errors, message: '' };
+};

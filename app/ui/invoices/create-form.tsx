@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { CustomerField } from '@/app/lib/definitions';
 import Link from 'next/link';
 import {
@@ -131,9 +131,7 @@ export default function Form({ customers }: { customers: CustomerField[] }) {
           </div>
           <div id="form-error" aria-live="polite" aria-atomic="true">
             {state.message && (
-              <p className="mt-2 text-sm text-red-500">
-                {state.message}
-              </p>
+              <p className="mt-2 text-sm text-red-500">{state.message}</p>
             )}
           </div>
         </fieldset>
