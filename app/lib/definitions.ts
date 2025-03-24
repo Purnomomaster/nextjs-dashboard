@@ -101,7 +101,13 @@ export type Product = {
 
 export type Menu = {
   id: number;
-  title: string;
+  name: string;
+  description: string;
   dir: string;
   end: string;
+  idfrom: string;
+  icon: string;
+  lv1: number;
+  lv2: number;
+  lv3: number;
 };

@@ -1,7 +1,7 @@
 'use client';
 
-import { useFormState } from 'react-dom';
-import { createMenu } from '@/app/lib/actions';
+import { useActionState } from 'react';
+import { createMenu } from '@/app/model/menu/action';
 import { Menu } from '@/app/lib/definitions';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
@@ -12,13 +12,12 @@ interface FormProps {
 
 export default function Form({ menus }: FormProps) {
   const initialState = { message: '', errors: {} };
-  const [state, dispatch] = useFormState(createMenu, initialState);
+  const [state, dispatch] = useActionState(createMenu, initialState);
 
   return (
     <form
       action={dispatch}
       aria-describedby="form-error"
-      encType="multipart/form-data"
     >
       <div className="rounded-md bg-gray-50 p-4 md:p-6">
         {/* Menu Name */}

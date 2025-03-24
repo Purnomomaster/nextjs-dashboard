@@ -2,7 +2,7 @@ import { InvoicesTableSkeleton } from '@/app/ui/skeletons';
 import { Suspense } from 'react';
 import Search from '@/app/ui/search';
 import { lusitana } from '@/app/ui/fonts';
-import { fetchProducts } from '@/app/model/product';
+import { fetchProducts } from '@/app/model/product/action';
 import { CreateProduct } from '@/app/ui/product/buttons';
 import Table from '@/app/ui/product/table';
 export default async function Page({

@@ -6,7 +6,7 @@ import { redirect } from 'next/navigation';
 import { z } from 'zod';
 import { promises as fsPromises } from 'fs';
 import path from 'path';
-import client from '../lib/db';
+import client from '../../lib/db';
 
 // Define the State type
 type ProductState = {

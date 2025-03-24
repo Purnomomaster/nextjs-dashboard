@@ -1,6 +1,6 @@
 'use client';
 import { Product } from '@/app/lib/definitions';
-import { createProduct, updateProduct } from '@/app/model/product';
+import { createProduct, updateProduct } from '@/app/model/product/action';
 import Link from 'next/link';
 import { Button } from '@/app/ui/button';
 import { useActionState } from 'react';

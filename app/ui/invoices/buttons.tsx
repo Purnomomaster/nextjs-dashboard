@@ -39,11 +39,3 @@ export function Delete({ id }: { id: string }) {
     </>
   );
 }
-
-// export default function CreateMenu() {
-//     return (
-//         <Link href="/dashboard/menu/create">
-//             <Button>Create Menu</Button>
-//         </Link>
-//     );
-// }

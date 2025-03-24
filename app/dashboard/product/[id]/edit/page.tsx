@@ -1,7 +1,7 @@
 // import Form from '@/app/ui/products/edit-form';
 import Form from '@/app/ui/product/form';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
-import { fetchProduct } from '@/app/model/product';
+import { fetchProduct } from '@/app/model/product/action';
 import { notFound } from 'next/navigation';
 import { Metadata } from 'next';
 export const metadata: Metadata = {
