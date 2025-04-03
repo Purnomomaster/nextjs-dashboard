@@ -1,5 +1,6 @@
 'use server';
-import { auth } from "@/auth"
+import { unstable_noStore as noStore } from 'next/cache';
+import { auth } from "@/auth";
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -8,19 +9,28 @@ import path from 'path';
 import client from '../../lib/db';
 
 const MenuSchema = z.object({
-    name: z.string({
-        invalid_type_error: 'Please provide a menu name.',
-    }),
-    description: z.string().optional(),
+    id: z.string().min(1, "Menu ID is required"),
+    name: z.string().min(1, "Menu name is required"),
+    description: z.string().min(1, "Description is required"),
+    end: z.string().optional(),
     idfrom: z.string().optional(),
+    icon: z.string().optional(),
+    lv1: z.coerce.number().int().optional(),
+    lv2: z.coerce.number().int().optional(),
+    lv3: z.coerce.number().int().optional(),
 });
-
+const CreateMenu = MenuSchema.omit({ id: true });
 export async function createMenu(prevState: any, formData: FormData) {
     // Validate form using Zod
-    const validatedFields = MenuSchema.safeParse({
-        name: formData.get('name'),
-        description: formData.get('description'),
-        idfrom: formData.get('idfrom'),
+    const validatedFields = CreateMenu.safeParse({
+        name: formData.get("name"),
+        description: formData.get("description"),
+        idfrom: formData.get("idfrom"),
+        end: formData.get("end"),
+        icon: formData.get("icon"),
+        lv1: formData.get("lv1"),
+        lv2: formData.get("lv2"),
+        lv3: formData.get("lv3"),
     });
 
     // If form validation fails, return errors early. Otherwise, continue.
@@ -32,17 +42,22 @@ export async function createMenu(prevState: any, formData: FormData) {
     }
 
     // Prepare data for insertion into the database
-    const { name, description, idfrom } = validatedFields.data;
-    console.log(validatedFields.data);
-    return {
-        errors: "",
-        message: 'tes lihat console.',
-    };
+    const { name, description, idfrom, end, icon, lv1, lv2, lv3 } = validatedFields.data;
+    const exist = await getMenuByName(String(name));
+
+    if (exist) {
+        return { ...prevState, message: 'Menu sudah ada' };
+    }
+    // console.log(validatedFields.data);
+    // return {
+    //     errors: "",
+    //     message: 'tes lihat console.',
+    // };
 
     try {
         // If copyMenuId is provided, copy the menu
-        if (copyMenuId) {
-            const menu = await getMenuById(Number(copyMenuId));
+        if (idfrom) {
+            const menu = await getMenuById(Number(idfrom));
 
             if (!menu) {
                 return { ...prevState, message: 'Menu tidak ditemukan' };
@@ -80,12 +95,12 @@ export async function createMenu(prevState: any, formData: FormData) {
                     );
                     const targetPath = path.join(
                         process.cwd(),
-                        `app/${folder}/copied/`,
-                        name.trim(),
+                        `app/${folder}/`,
+                        end,
                     );
                     // Jika folder tujuan belum ada, buat dulu
                     if (!existsSync(targetPath)) {
-                        console.log(`📂 Folder tujuan ${folder}/${name} belum ada, membuatnya...`);
+                        console.log(`📂 Folder tujuan ${folder}/${end} belum ada, membuatnya...`);
                         await fsPromises.mkdir(targetPath, { recursive: true });
                     }
                     console.log('Copying from:', sourcePath, 'to:', targetPath);
@@ -95,17 +110,13 @@ export async function createMenu(prevState: any, formData: FormData) {
                     await processFolder({
                         folderPath: targetPath,
                         searchValue: menu.end.trim(),
-                        replaceValue: name.trim(),
+                        replaceValue: end,
                     });
                     console.log('✅ Semua file dalam folder telah diperbarui!');
                 }
-                // Insert data into the database
-                await client.query({
-                    text: 'INSERT INTO menu (name, dir, "end") VALUES ($1, $2, $3)',
-                    values: [name, 'dashboard', name],
-                });
+
                 await client.query(`
-                    CREATE TABLE IF NOT EXISTS ${name} (LIKE ${menu.end.trim()} INCLUDING ALL);
+                    CREATE TABLE IF NOT EXISTS ${end} (LIKE ${menu.end.trim()} INCLUDING ALL);
                 `);
             } catch (error) {
                 if (error instanceof Error) {
@@ -115,6 +126,16 @@ export async function createMenu(prevState: any, formData: FormData) {
                 }
             }
         }
+        const session = await auth();
+
+        // Get user ID and name
+        const userId = session?.user?.id;
+        const userName = session?.user?.name;
+        // Insert data into the database
+        await client.query({
+            text: 'INSERT INTO menu (name, dir, description, "end", idfrom, icon, lv1, lv2, lv3, iduserc, userc, isd) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)',
+            values: [name, 'dashboard', description, end, idfrom ?? "", icon, lv1, lv2, lv3, userId, userName, 0],
+        });
     } catch (error) {
         // If a database error occurs, return a more specific error.
         console.log(error);
@@ -124,6 +145,7 @@ export async function createMenu(prevState: any, formData: FormData) {
     }
 
     // Revalidate the cache for the menus page and redirect the user.
+    revalidatePath('/dashboard');
     revalidatePath('/dashboard/menu');
     redirect('/dashboard/menu');
 }
@@ -226,10 +248,11 @@ export async function deleteMenu(id: number) {
 
 
 // Ambil semua menu
-export async function fetchMenus() {
+export async function fetchMenus(query: string = '') {
+    noStore();
     try {
         const result = await client.query(
-            'SELECT * FROM menu WHERE isd=0 ORDER BY created DESC',
+            'SELECT * FROM menu WHERE isd=0 and "end" LIKE $1 ORDER BY lv1 ASC, created DESC', [`%${query}%`],
         );
         return result.rows;
     } catch (error) {
@@ -248,6 +271,18 @@ export async function getMenuById(menuId: number) {
     } catch (error) {
         console.error('Database Error:', error);
         throw new Error('Failed to fetch menu by ID.');
+    }
+}
+// Ambil menu berdasarkan Nama
+export async function getMenuByName(menuName: string) {
+    try {
+        const result = await client.query('SELECT * FROM menu WHERE name = $1 and isd=0', [
+            menuName,
+        ]);
+        return result.rows[0];
+    } catch (error) {
+        console.error('Database Error:', error);
+        throw new Error('Failed to fetch menu by Name.');
     }
 }
 

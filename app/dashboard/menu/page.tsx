@@ -8,9 +8,17 @@ import MenuTableSkeleton from '@/app/ui/menu/skeleton';
 import MenuTable from '@/app/ui/menu/table';
 
 
-export default async function Page() {
-  const menus = await fetchMenus(); // Fetch menu list from the database
-  console.log(menus);
+export default async function Page({
+  searchParams,
+}: {
+  searchParams?: {
+    query?: string;
+  };
+}) {
+  const resolvedSearchParams = await searchParams; // Await sebelum digunakan
+  const query = resolvedSearchParams?.query || '';
+  const menus = await fetchMenus(query); // Fetch menu list from the database
+  // console.log(menus);
    // Calculate the highest lv1 value from all menus
    const highestLv1 = menus.reduce((highest, menu) => {
     const lv1Value = menu.lv1 || 0

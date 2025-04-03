@@ -99,6 +99,12 @@ export type Product = {
   [key: string]: any; // Add this line
 };
 
+export type Authority = {
+  id: string;
+  idmenu: string;
+  see: number;
+};
+
 export type Menu = {
   id: number;
   name: string;

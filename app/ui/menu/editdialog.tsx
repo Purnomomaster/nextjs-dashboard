@@ -267,9 +267,10 @@ export function EditMenuDialog({ menu, menus }: EditMenuDialogProps) {
                 <label htmlFor="edit-end" className="mb-2 block text-sm font-medium">
                   Endpoint
                 </label>
-                <textarea
+                <input
                   id="edit-end"
                   name="end"
+                  type="text"
                   value={formData.end.trim()}
                   onChange={handleInputChange}
                   className="peer block w-full rounded-md border border-gray-200 py-2 px-3 text-sm outline-2 placeholder:text-gray-500"

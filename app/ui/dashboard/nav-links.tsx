@@ -1,31 +1,48 @@
 'use client';
 
-import {
-  UserGroupIcon,
-  HomeIcon,
-  InboxIcon,
-  ArchiveBoxIcon,
-  DocumentDuplicateIcon,
-} from '@heroicons/react/24/outline';
+import * as Icons from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { Menu } from '@/app/lib/definitions';
+
+interface MenuProps {
+  menus: Menu[];
+}
+
+export function generateNavLinks({menus}: MenuProps) {
+  return menus.map((menu) => {
+    const IconComponent = Icons[menu.icon.trim() as keyof typeof Icons] || Icons['HomeIcon']; // Gunakan default jika tidak ditemukan
+
+    return {
+      name: menu.name.trim(),
+      href: `/${menu.dir.trim()}/${menu.end.trim()}`.replace(/\/+$/, ''), // Hilangkan double slash
+      icon: <IconComponent className="w-5 h-5" />, // Render ikon secara dinamis
+    };
+  });
+}
+
+// Contoh penggunaan
+
+
 
 // Map of links to display in the side navigation.
 // Depending on the size of the application, this would be stored in a database.
-const links = [
-  { name: 'Home', href: '/dashboard', icon: HomeIcon },
-  {
-    name: 'Invoices',
-    href: '/dashboard/invoices',
-    icon: DocumentDuplicateIcon,
-  },
-  { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
-  { name: 'Product', href: '/dashboard/product', icon: ArchiveBoxIcon },
-  { name: 'Menus', href: '/dashboard/menu', icon: InboxIcon },
-];
+// const links = [
+//   { name: 'Home', href: '/dashboard', icon: HomeIcon },
+//   {
+//     name: 'Invoices',
+//     href: '/dashboard/invoices',
+//     icon: DocumentDuplicateIcon,
+//   },
+//   { name: 'Customers', href: '/dashboard/customers', icon: UserGroupIcon },
+//   { name: 'Product', href: '/dashboard/product', icon: ArchiveBoxIcon },
+//   { name: 'Menus', href: '/dashboard/menu', icon: InboxIcon },
+// ];
 
-export default function NavLinks() {
+export default function NavLinks({menus}: MenuProps) {
+  const links = generateNavLinks({ menus });
+  // console.log(links);
   const pathname = usePathname();
   return (
     <>
@@ -42,7 +59,7 @@ export default function NavLinks() {
               },
             )}
           >
-            <LinkIcon className="w-6" />
+            {LinkIcon}
             <p className="hidden md:block">{link.name}</p>
           </Link>
         );
